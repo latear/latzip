@@ -18,6 +18,7 @@ struct ArchiveIndex: Sendable {
         var map: [String: [ArchiveEntryRecord]] = [:]
         map[""] = []
         var files: [ArchiveEntryRecord] = []
+        var seenDirs: Set<String> = []
         let sortedInput = flatPaths.sorted { $0.path < $1.path }
         for item in sortedInput {
             let trimmed = item.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
@@ -36,8 +37,38 @@ struct ArchiveIndex: Sendable {
                 permissionsMode: item.mode
             )
             map[parentKey, default: []].append(record)
-            if !item.isDir {
+            if item.isDir {
+                seenDirs.insert(trimmed)
+            } else {
                 files.append(record)
+            }
+        }
+        
+        for item in sortedInput {
+            let trimmed = item.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+            guard !trimmed.isEmpty else { continue }
+            if item.isDir {
+                seenDirs.insert(trimmed)
+            }
+            var components = trimmed.split(separator: "/")
+            while components.count > 1 {
+                components.removeLast()
+                let dirPath = components.joined(separator: "/")
+                if !seenDirs.contains(dirPath) {
+                    seenDirs.insert(dirPath)
+                    let dirName = (dirPath as NSString).lastPathComponent
+                    let dirParent = (dirPath as NSString).deletingLastPathComponent
+                    let impliedRecord = ArchiveEntryRecord(
+                        name: dirName,
+                        fullPath: dirPath,
+                        parentPath: dirParent,
+                        isFolder: true,
+                        byteSize: 0,
+                        modified: nil,
+                        permissionsMode: 0o755
+                    )
+                    map[dirParent, default: []].append(impliedRecord)
+                }
             }
         }
         for k in map.keys {

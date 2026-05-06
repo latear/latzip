@@ -22,6 +22,9 @@ final class ArchiveWorkspaceViewModel: ObservableObject, Identifiable {
     @Published var listItems: [ArchiveEntryRecord] = []
     @Published var selection: Set<ArchiveEntryRecord.ID> = []
 
+    var canGoUp: Bool { !browseFolderPath.isEmpty }
+    var parentFolderPath: String { (browseFolderPath as NSString).deletingLastPathComponent }
+
     @Published var searchText: String = ""
     @Published var searchEntireArchive: Bool = false
     @Published var searchUsesRegex: Bool = false
@@ -143,6 +146,13 @@ final class ArchiveWorkspaceViewModel: ObservableObject, Identifiable {
         applyListFilterAndSort()
     }
 
+    func selectFileAndNavigate(fileFullPath: String) {
+        let parentPath = (fileFullPath as NSString).deletingLastPathComponent
+        browseFolderPath = parentPath
+        applyListFilterAndSort()
+        selection = [fileFullPath]
+    }
+
     func goUp() {
         if browseFolderPath.isEmpty { return }
         browseFolderPath = (browseFolderPath as NSString).deletingLastPathComponent
@@ -167,11 +177,6 @@ final class ArchiveWorkspaceViewModel: ObservableObject, Identifiable {
         guard let index else {
             listItems = []
             return
-        }
-        if searchUsesRegex, !searchText.isEmpty {
-            searchRegexInvalid = (try? NSRegularExpression(pattern: searchText, options: [])) == nil
-        } else {
-            searchRegexInvalid = false
         }
 
         var rows: [ArchiveEntryRecord]
@@ -224,6 +229,19 @@ final class ArchiveWorkspaceViewModel: ObservableObject, Identifiable {
                 return false
             }
         }
+        if !browseFolderPath.isEmpty {
+            let parentPath = (browseFolderPath as NSString).deletingLastPathComponent
+            let dotDot = ArchiveEntryRecord(
+                name: "..",
+                fullPath: parentPath,
+                parentPath: parentPath,
+                isFolder: true,
+                byteSize: 0,
+                modified: nil,
+                permissionsMode: 0o755
+            )
+            rows.insert(dotDot, at: 0)
+        }
         listItems = rows
     }
 
@@ -267,6 +285,10 @@ final class ArchiveWorkspaceViewModel: ObservableObject, Identifiable {
 
     /// Doble clic / Enter: carpeta entra; fichero prepara vista previa.
     func openOrDrillDown(_ item: ArchiveEntryRecord, onNestedArchive: @escaping (URL, String) -> Void) async {
+        if item.name == ".." && item.isFolder {
+            goUp()
+            return
+        }
         if item.isFolder {
             browseFolderPath = item.fullPath
             selection = []

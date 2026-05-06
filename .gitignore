@@ -42,6 +42,7 @@ fastlane/test_output
 lat/
 
 # Otros
+AGENTS.md
 *.log
 *.tmp
 *.swp

@@ -184,15 +184,13 @@ struct ArchiveFileListTable: View {
                 hoveredRowID = nil
             }
         }
-        .simultaneousGesture(
-            TapGesture(count: 2).onEnded { _ in
-                Task {
-                    await viewModel.openOrDrillDown(item) { url, name in
-                        app.openNestedChild(tempURL: url, title: name, parent: viewModel)
-                    }
+        .onTapGesture(count: 2) {
+            Task {
+                await viewModel.openOrDrillDown(item) { url, name in
+                    app.openNestedChild(tempURL: url, title: name, parent: viewModel)
                 }
             }
-        )
+        }
         .onTapGesture {
             applySelection(for: item, at: index)
         }
