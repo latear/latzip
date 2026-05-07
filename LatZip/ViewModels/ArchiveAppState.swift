@@ -67,7 +67,7 @@ final class ArchiveAppState: ObservableObject {
         extractionCollisionPolicy = ExtractionCollisionPolicy(rawValue: raw ?? "") ?? .keepBoth
         appLanguage = AppLanguage(persistedValue: UserDefaults.standard.string(forKey: Self.appLanguageKey))
         appearanceMode = AppAppearance(persisted: UserDefaults.standard.string(forKey: AppAppearance.storageKey))
-        archivePasswordKeychainEnabled = UserDefaults.standard.bool(forKey: ArchiveKeychainPreference.userDefaultsKey)
+        archivePasswordKeychainEnabled = ArchiveKeychainPreference.isEnabled
         AppAppearance.applyToSharedApplication(appearanceMode)
     }
 
@@ -77,7 +77,7 @@ final class ArchiveAppState: ObservableObject {
             set: { [self] newValue in
                 guard newValue != archivePasswordKeychainEnabled else { return }
                 archivePasswordKeychainEnabled = newValue
-                UserDefaults.standard.set(newValue, forKey: ArchiveKeychainPreference.userDefaultsKey)
+                ArchiveKeychainPreference.setEnabled(newValue)
             }
         )
     }
