@@ -2,6 +2,7 @@
 //  View+AppStyles.swift
 //  LatZip
 //
+//  Flat design: hairline border cards, no shadows or glow.
 
 import AppKit
 import SwiftUI
@@ -12,7 +13,7 @@ extension View {
         modifier(AppPointerHoverModifier())
     }
 
-    /// Tarjeta estándar con fondo de control y borde hairline.
+    /// Flat card with hairline border — no shadow, no glow.
     func appCardChrome(cornerRadius: CGFloat = AppRadius.medium) -> some View {
         background {
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
@@ -20,7 +21,7 @@ extension View {
         }
         .overlay {
             RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .strokeBorder(AppColors.hairlineBorder, lineWidth: 1)
+                .strokeBorder(AppColors.hairlineBorder, lineWidth: 0.75)
         }
     }
 }

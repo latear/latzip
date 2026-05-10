@@ -2,87 +2,131 @@
 //  ArchiveSidebarPanel.swift
 //  LatZip
 //
+//  Flat design: flat rail sidebar, subtle separator border, no glossy effects.
 
 import SwiftUI
 
-/// Sidebar translúcido: recientes, favoritos y árbol del archivo.
 struct ArchiveSidebarPanel: View {
     @EnvironmentObject private var app: ArchiveAppState
     @ObservedObject var viewModel: ArchiveWorkspaceViewModel
 
     var body: some View {
-        List {
-            if !app.recentURLs.isEmpty {
-                SidebarSectionView(title: String(localized: "sidebar.recents"), systemImage: "clock") {
-                    ForEach(app.recentURLs, id: \.path) { url in
-                        SidebarItemView(
-                            title: url.lastPathComponent,
-                            systemImage: "clock.arrow.circlepath",
-                            isActive: url.standardizedFileURL == viewModel.archiveURL.standardizedFileURL
-                        ) {
-                            app.openRecent(url)
+        VStack(spacing: 0) {
+            sidebarBrandHeader
+
+            List {
+                if !app.recentURLs.isEmpty {
+                    SidebarSectionView(title: String(localized: "sidebar.recents"), systemImage: "clock") {
+                        ForEach(app.recentURLs, id: \.path) { url in
+                            SidebarItemView(
+                                title: url.lastPathComponent,
+                                systemImage: "clock.arrow.circlepath",
+                                isActive: url.standardizedFileURL == viewModel.archiveURL.standardizedFileURL
+                            ) {
+                                app.openRecent(url)
+                            }
+                            .listRowInsets(EdgeInsets(top: AppSpacing.xs, leading: AppSpacing.md, bottom: AppSpacing.xs, trailing: AppSpacing.md))
                         }
-                        .listRowInsets(EdgeInsets(top: AppSpacing.xs, leading: AppSpacing.lg, bottom: AppSpacing.xs, trailing: AppSpacing.lg))
                     }
                 }
-            }
 
-            if !app.favoriteURLs.isEmpty {
-                SidebarSectionView(title: String(localized: "sidebar.favorites"), systemImage: "star") {
-                    ForEach(app.favoriteURLs, id: \.path) { url in
-                        SidebarItemView(
-                            title: url.lastPathComponent,
-                            systemImage: "star.fill",
-                            isActive: url.standardizedFileURL == viewModel.archiveURL.standardizedFileURL
-                        ) {
-                            app.openRecent(url)
-                        }
-                        .listRowInsets(EdgeInsets(top: AppSpacing.xs, leading: AppSpacing.lg, bottom: AppSpacing.xs, trailing: AppSpacing.lg))
-                        .contextMenu {
-                            Button(String(localized: "sidebar.favorite_remove")) {
-                                app.toggleFavorite(url)
+                if !app.favoriteURLs.isEmpty {
+                    SidebarSectionView(title: String(localized: "sidebar.favorites"), systemImage: "star") {
+                        ForEach(app.favoriteURLs, id: \.path) { url in
+                            SidebarItemView(
+                                title: url.lastPathComponent,
+                                systemImage: "star.fill",
+                                isActive: url.standardizedFileURL == viewModel.archiveURL.standardizedFileURL
+                            ) {
+                                app.openRecent(url)
+                            }
+                            .listRowInsets(EdgeInsets(top: AppSpacing.xs, leading: AppSpacing.md, bottom: AppSpacing.xs, trailing: AppSpacing.md))
+                            .contextMenu {
+                                Button(String(localized: "sidebar.favorite_remove")) {
+                                    app.toggleFavorite(url)
+                                }
                             }
                         }
                     }
                 }
+
+                SidebarSectionView(title: String(localized: "sidebar.structure"), systemImage: "rectangle.split.3x1") {
+                    SidebarTreeView(rootNodes: viewModel.rootNodes, currentPath: viewModel.browseFolderPath, onSelect: { path in
+                        withAnimation(AppAnimation.standard) {
+                            viewModel.selectFolder(path: path)
+                        }
+                    }, onFileSelect: { path in
+                        withAnimation(AppAnimation.standard) {
+                            viewModel.selectFileAndNavigate(fileFullPath: path)
+                        }
+                    })
+                }
+                .animation(AppAnimation.standard, value: viewModel.browseFolderPath)
+            }
+            .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+
+            sidebarFooter
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AppColors.sidebarRailBackground)
+        .navigationTitle(viewModel.displayTitle)
+        .navigationSplitViewColumnWidth(min: 240, ideal: 240, max: 260)
+    }
+
+    private var sidebarBrandHeader: some View {
+        HStack {
+            Spacer()
+
+            HStack(spacing: AppSpacing.md) {
+                Image(systemName: "bolt.fill")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .frame(width: 20, height: 20)
+
+                Text("LatZip")
+                    .font(.system(size: 19, weight: .semibold))
+                    .foregroundStyle(AppColors.textPrimary)
             }
 
-            SidebarSectionView(title: String(localized: "sidebar.structure"), systemImage: "rectangle.split.3x1") {
-                SidebarTreeView(rootNodes: viewModel.rootNodes, currentPath: viewModel.browseFolderPath, onSelect: { path in
-                    withAnimation(AppAnimation.standard) {
-                        viewModel.selectFolder(path: path)
-                    }
-                }, onFileSelect: { path in
-                    withAnimation(AppAnimation.standard) {
-                        viewModel.selectFileAndNavigate(fileFullPath: path)
-                    }
-                })
-            }
-            .animation(AppAnimation.standard, value: viewModel.browseFolderPath)
+            Spacer()
         }
-        .listStyle(.sidebar)
-        .scrollContentBackground(.hidden)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background {
-            ZStack {
-                Rectangle()
-                    .fill(CuratorDesignTokens.sidebarMaterial)
-                LinearGradient(
-                    colors: [AppColors.sidebarGradientTop, Color.clear],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .allowsHitTesting(false)
+        .frame(height: 38, alignment: .center)
+        .padding(.horizontal, AppSpacing.lg)
+        .padding(.top, AppSpacing.sm)
+        .padding(.bottom, AppSpacing.md)
+    }
+
+    private var sidebarFooter: some View {
+        Button {
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        } label: {
+            HStack(spacing: AppSpacing.md) {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .frame(width: AppLayoutMetrics.sidebarIconColumn, alignment: .center)
+
+                Text(String(localized: "help.sk.prefs"))
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+
+                Spacer()
             }
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.leading, AppSpacing.sm)
+            .padding(.vertical, AppSpacing.md)
+            .contentShape(Rectangle())
         }
-        .navigationTitle(viewModel.displayTitle)
-        .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 300)
+        .buttonStyle(.plain)
+        .background(AppColors.sidebarRailBackground)
     }
 
     private func sidebarLeafIcon(for node: ArchiveNode) -> String {
         if node.isNestedArchiveCandidate { return "doc.zipper" }
         return "doc"
     }
+
 }
 
 struct SidebarTreeView: View {
@@ -116,7 +160,7 @@ struct SidebarFolderRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 Button {
                     withAnimation(AppAnimation.standard) {
                         isExpanded.toggle()
@@ -174,8 +218,8 @@ struct SidebarFolderRow: View {
             }
             .frame(minHeight: AppLayoutMetrics.sidebarItemMinHeight, alignment: .leading)
             .padding(.leading, indentPadding)
-            .background(isSelected ? CuratorDesignTokens.accentBlue.opacity(0.08) : Color.clear)
-            .cornerRadius(AppRadius.small)
+            .padding(.trailing, AppSpacing.sm)
+            .background(isSelected ? AppColors.sidebarActivePill : Color.clear)
 
             if isExpanded, let children = node.children {
                 ForEach(children, id: \.fullPath) { child in

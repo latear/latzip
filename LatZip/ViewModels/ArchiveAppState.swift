@@ -190,12 +190,12 @@ final class ArchiveAppState: ObservableObject {
 
     func openArchive(url: URL, displayTitle: String? = nil) {
         let standardized = url.standardizedFileURL
-        if let existing = workspaces.first(where: { $0.archiveURL == standardized }) {
-            selectedWorkspaceId = existing.id
-            return
+        if let current = selectedWorkspace {
+            current.cancelActiveOperation()
+            current.cleanupTemp()
         }
         let ws = ArchiveWorkspaceViewModel(archiveURL: standardized, displayTitle: displayTitle)
-        workspaces.append(ws)
+        workspaces = [ws]
         selectedWorkspaceId = ws.id
         addToRecents(standardized)
         Task { await ws.load(forceNewPassword: false) }
@@ -246,10 +246,7 @@ final class ArchiveAppState: ObservableObject {
         ws.cancelActiveOperation()
         ws.cleanupTemp()
         workspaces.removeAll { $0.id == ws.id }
-        if selectedWorkspaceId == ws.id {
-            selectedWorkspaceId = workspaces.last?.id
-        }
-        ensureValidWorkspaceSelection()
+        selectedWorkspaceId = nil
     }
 
     /// Evita un `selectedWorkspaceId` huérfano si la lista de pestañas cambia.

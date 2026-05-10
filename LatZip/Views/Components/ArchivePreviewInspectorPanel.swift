@@ -2,10 +2,10 @@
 //  ArchivePreviewInspectorPanel.swift
 //  LatZip
 //
+//  Flat design: flat sections with hairline separators; no elevated card or shadow.
 
 import SwiftUI
 
-/// Inspector derecho estilo «The Digital Curator»: preview, metadatos, badge cifrado y compartir.
 struct ArchivePreviewInspectorPanel: View {
     @ObservedObject var viewModel: ArchiveWorkspaceViewModel
 
@@ -36,17 +36,15 @@ struct ArchivePreviewInspectorPanel: View {
 
                 metadataArea
 
-                CuratorShareArchiveButton(archiveURL: viewModel.archiveURL)
-                    .padding(.top, AppSpacing.sm)
             }
-            .padding(AppSpacing.xl)
+            .padding(AppSpacing.lg)
         }
         .frame(minWidth: 300, idealWidth: 340, maxWidth: 400, maxHeight: .infinity, alignment: .topLeading)
         .background(AppColors.appBackground)
         .overlay(alignment: .leading) {
             Rectangle()
                 .fill(AppColors.separator)
-                .frame(width: 1)
+                .frame(width: 0.5)
                 .frame(maxHeight: .infinity)
         }
         .animation(AppAnimation.panelReveal, value: viewModel.selection.first)
@@ -61,9 +59,8 @@ struct ArchivePreviewInspectorPanel: View {
                 .clipShape(RoundedRectangle(cornerRadius: CuratorDesignTokens.cardRadius, style: .continuous))
                 .overlay {
                     RoundedRectangle(cornerRadius: CuratorDesignTokens.cardRadius, style: .continuous)
-                        .strokeBorder(AppColors.panelBorder, lineWidth: 1)
+                        .strokeBorder(AppColors.hairlineBorder, lineWidth: 0.75)
                 }
-                .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 3)
         } else {
             RoundedRectangle(cornerRadius: CuratorDesignTokens.cardRadius, style: .continuous)
                 .fill(AppColors.crumbIdleFill)
@@ -111,7 +108,9 @@ struct ArchivePreviewInspectorPanel: View {
             }
 
             if let caps = viewModel.formatCaps {
-                Divider()
+                Rectangle()
+                    .fill(AppColors.separator)
+                    .frame(height: 0.5)
                     .padding(.vertical, AppSpacing.xs)
                 MetadataRowView(title: String(localized: "inspector.format"), value: caps.formatName)
                 MetadataRowView(

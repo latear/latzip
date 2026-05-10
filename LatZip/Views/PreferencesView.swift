@@ -2,15 +2,14 @@
 //  PreferencesView.swift
 //  LatZip
 //
+//  Flat design: standard grouped form style, no elevated cards.
 
 import SwiftUI
 
-/// Ventana de preferencias (macOS ⌘,). Una pestaña por tema (sin pestaña «General»).
 struct PreferencesView: View {
     @EnvironmentObject private var app: ArchiveAppState
     @State private var showKeyboardShortcutsSheet = false
 
-    /// Altura del contenido por pestaña (~mitad del tamaño anterior); el `Form` hace scroll si hace falta.
     private static let formMaxHeight: CGFloat = 268
     private static let windowMinHeight: CGFloat = 300
 

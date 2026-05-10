@@ -2,10 +2,10 @@
 //  SearchFieldView.swift
 //  LatZip
 //
+//  Flat design: minimal search field, hairline border, no shadow.
 
 import SwiftUI
 
-/// Campo de búsqueda compacto para la barra de herramientas.
 struct SearchFieldView: View {
     @Binding var text: String
     @Binding var searchEntireArchive: Bool
@@ -21,8 +21,6 @@ struct SearchFieldView: View {
 
     @State private var showFilters = false
 
-    /// Opciones avanzadas (regex, alcance, tamaño) van al popover para no saturar la toolbar de macOS
-    /// y evitar solapamientos con el título de ventana cuando hay muchos botones.
     private var toolbarSearchHasExtras: Bool {
         searchUsesRegex || searchEntireArchive
             || !searchMinSizeMBText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -67,20 +65,7 @@ struct SearchFieldView: View {
         }
         .padding(.horizontal, AppSpacing.md)
         .padding(.vertical, AppSpacing.sm)
-        .background {
-            RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
-                .fill(AppColors.contentBackground)
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
-                .strokeBorder(AppColors.hairlineBorder, lineWidth: 1)
-        }
-        .shadow(
-            color: AppShadow.searchField.color,
-            radius: AppShadow.searchField.radius,
-            x: AppShadow.searchField.x,
-            y: AppShadow.searchField.y
-        )
+        .background(AppColors.contentBackground)
     }
 
     private var searchFiltersPopover: some View {

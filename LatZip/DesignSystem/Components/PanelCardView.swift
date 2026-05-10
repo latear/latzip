@@ -2,10 +2,10 @@
 //  PanelCardView.swift
 //  LatZip
 //
+//  Flat design: flat tonal surface, hairline border, no shadow or gradient strip.
 
 import SwiftUI
 
-/// Contenedor elevado para el panel lateral (preview / inspector).
 struct PanelCardView<Content: View>: View {
     @ViewBuilder let content: () -> Content
 
@@ -14,38 +14,11 @@ struct PanelCardView<Content: View>: View {
             .padding(.horizontal, AppSpacing.xl)
             .padding(.vertical, AppSpacing.xl)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background {
-                RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
-                    .fill(.regularMaterial)
-            }
+            .background(AppColors.contentBackground)
             .overlay {
-                RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
-                    .strokeBorder(AppColors.hairlineBorder, lineWidth: 1)
+                RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+                    .strokeBorder(AppColors.hairlineBorder, lineWidth: 0.75)
             }
-            .shadow(
-                color: AppShadow.panel.color,
-                radius: AppShadow.panel.radius,
-                x: AppShadow.panel.x,
-                y: AppShadow.panel.y
-            )
             .padding(AppSpacing.md)
-            .overlay(alignment: .leading) {
-                Rectangle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.primary.opacity(0.11),
-                                Color.primary.opacity(0.04),
-                                Color.clear
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .frame(width: 1)
-                    .padding(.vertical, AppSpacing.xl)
-                    .padding(.leading, AppSpacing.xs)
-                    .allowsHitTesting(false)
-            }
     }
 }

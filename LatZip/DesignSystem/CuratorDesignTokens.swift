@@ -1,25 +1,29 @@
 //
 //  CuratorDesignTokens.swift
-//  LatZip — estética «The Digital Curator» (macOS Sonoma / Sequoia).
+//  LatZip — Flat Minimal Design Tokens
 //
 
 import SwiftUI
 
-/// Tokens visuales compartidos (acento fijo, radios, materiales).
+/// Shared visual tokens for a cohesive flat design across the app.
 enum CuratorDesignTokens {
-    /// Azul sistema de referencia (#007AFF); usable con `.tint` en botones prominentes.
     static let accentBlue = Color(red: 0, green: 122 / 255, blue: 1)
 
-    static let sidebarMaterial: Material = .ultraThinMaterial
+    /// Sidebar rail background (dark in dark mode, warm light in light mode).
+    static let sidebarMaterial: Color = Color.clear
 
-    /// Cabeceras de ventana / título de biblioteca.
-    static let libraryTitle = Font.system(size: 18, weight: .semibold)
+    /// Header title for library views.
+    static let libraryTitle = Font.system(size: 17, weight: .semibold)
     static let librarySubtitle = Font.system(size: 12, weight: .medium)
 
-    /// Etiquetas de metadatos (mockup ~11pt medium).
+    /// Metadata label (flat style — no elevation).
     static let metadataLabel = Font.system(size: 11, weight: .medium)
 
-    static let cardRadius: CGFloat = 12
-    static let buttonRadius: CGFloat = 10
-    static let rowComfortPadding: CGFloat = 12
+    /// Unified corner radius — squared minimal, not oversized.
+    static let cardRadius: CGFloat = 6
+    static let buttonRadius: CGFloat = 4
+    static let rowComfortPadding: CGFloat = 10
+
+    /// Flat border widths (hairline — 0.75pt).
+    static let hairlineWidth: CGFloat = 0.75
 }

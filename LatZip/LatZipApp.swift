@@ -26,6 +26,7 @@ struct LatZipApp: App {
                     appDelegate.bind(appState: appState)
                 }
         }
+        .windowToolbarStyle(.unifiedCompact(showsTitle: false))
         Settings {
             PreferencesView()
                 .environmentObject(appState)

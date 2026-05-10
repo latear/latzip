@@ -19,5 +19,6 @@ struct AppToolbarButton: View {
         }
         .disabled(disabled)
         .help(helpText)
+        .buttonStyle(.plain)
     }
 }

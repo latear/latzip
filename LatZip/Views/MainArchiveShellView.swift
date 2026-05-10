@@ -2,6 +2,7 @@
 //  MainArchiveShellView.swift
 //  LatZip
 //
+//  Flat design: clean welcome zone with dashed border, flat tab strip, no floating effects.
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -15,27 +16,24 @@ struct MainArchiveShellView: View {
             if app.workspaces.isEmpty {
                 welcomeDropZone
             } else {
-                VStack(spacing: 0) {
-                    WorkspaceTabStripView()
-                    workspaceArea
-                }
-                .onAppear {
-                    app.ensureValidWorkspaceSelection()
-                }
-                .onChange(of: app.workspaces.count) { _ in
-                    app.ensureValidWorkspaceSelection()
-                }
+                workspaceArea
+                    .onAppear {
+                        app.ensureValidWorkspaceSelection()
+                    }
+                    .onChange(of: app.workspaces.count) { _ in
+                        app.ensureValidWorkspaceSelection()
+                    }
             }
         }
         .frame(minWidth: 980, minHeight: 640)
         .background(AppColors.appBackground.opacity(0.001))
         .overlay {
             if shellDropTargeted && app.workspaces.isEmpty {
-                RoundedRectangle(cornerRadius: AppRadius.hero, style: .continuous)
-                    .strokeBorder(Color.accentColor.opacity(0.4), lineWidth: 2)
+                RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
+                    .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
                     .background(
-                        RoundedRectangle(cornerRadius: AppRadius.hero, style: .continuous)
-                            .fill(Color.accentColor.opacity(0.07))
+                        RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
+                            .fill(Color.accentColor.opacity(0.05))
                     )
                     .padding(AppSpacing.xxl)
                     .allowsHitTesting(false)
@@ -81,14 +79,14 @@ struct MainArchiveShellView: View {
     private var welcomeDropZone: some View {
         VStack(spacing: AppSpacing.xxl) {
             ZStack {
-                RoundedRectangle(cornerRadius: AppRadius.hero + 2, style: .continuous)
+                RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
                     .strokeBorder(
-                        AppColors.textPrimary.opacity(shellDropTargeted ? 0.22 : 0.11),
-                        style: StrokeStyle(lineWidth: 1.5, dash: [7, 5])
+                        AppColors.textPrimary.opacity(shellDropTargeted ? 0.20 : 0.10),
+                        style: StrokeStyle(lineWidth: 1.25, dash: [6, 4])
                     )
                     .background(
-                        RoundedRectangle(cornerRadius: AppRadius.hero + 2, style: .continuous)
-                            .fill(.ultraThinMaterial)
+                        RoundedRectangle(cornerRadius: AppRadius.large, style: .continuous)
+                            .fill(AppColors.contentBackground)
                     )
                     .frame(width: 440, height: 240)
                     .animation(AppAnimation.standard, value: shellDropTargeted)

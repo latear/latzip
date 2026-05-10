@@ -10,33 +10,28 @@ struct ArchiveWorkspaceView: View {
     @ObservedObject var viewModel: ArchiveWorkspaceViewModel
     @EnvironmentObject private var app: ArchiveAppState
 
-    @State private var columnVisibility: NavigationSplitViewVisibility = .all
+    @State private var sidebarVisible = true
     @State private var isDropTargeted = false
     @State private var showFormatsHelp = false
 
     var body: some View {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
-            ArchiveSidebarPanel(viewModel: viewModel)
-        } content: {
+        HSplitView {
+            if sidebarVisible {
+                ArchiveSidebarPanel(viewModel: viewModel)
+                    .frame(minWidth: 240, idealWidth: 240, maxWidth: 260)
+            }
+
             contentColumn
                 .frame(minWidth: 360, maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .layoutPriority(1)
-        } detail: {
-            ArchivePreviewInspectorPanel(viewModel: viewModel)
-                .layoutPriority(0)
-        }
-        .navigationSplitViewStyle(.automatic)
-        .toolbarBackground(.visible, for: .windowToolbar)
-        .onAppear {
-            syncColumnVisibility()
-        }
-        .onChange(of: viewModel.showPreviewPanel) { _ in
-            withAnimation(AppAnimation.standard) {
-                syncColumnVisibility()
+
+            if viewModel.showPreviewPanel {
+                ArchivePreviewInspectorPanel(viewModel: viewModel)
+                    .frame(minWidth: 280, idealWidth: 320, maxWidth: 420)
+                    .layoutPriority(0)
             }
         }
-        // Migas en `breadcrumbBar` (columna central). Pestañas en `WorkspaceTabStripView` (shell), no `TabView`, para no colapsar la toolbar.
-        .toolbar(content: workspaceToolbarContent)
+        .toolbarBackground(.hidden, for: .windowToolbar)
         .sheet(isPresented: $viewModel.showPasswordSheet) {
             passwordSheet
         }
@@ -68,10 +63,6 @@ struct ArchiveWorkspaceView: View {
         }
     }
 
-    private func syncColumnVisibility() {
-        columnVisibility = viewModel.showPreviewPanel ? .all : .doubleColumn
-    }
-
     @ToolbarContentBuilder
     private func workspaceToolbarContent() -> some ToolbarContent {
         ToolbarItemGroup(placement: .navigation) {
@@ -94,6 +85,7 @@ struct ArchiveWorkspaceView: View {
             } label: {
                 Image(systemName: viewModel.fileListUsesGridLayout ? "list.bullet" : "square.grid.2x2")
             }
+            .buttonStyle(.plain)
             .help(
                 viewModel.fileListUsesGridLayout
                     ? String(localized: "toolbar.view_list")
@@ -136,6 +128,7 @@ struct ArchiveWorkspaceView: View {
             } label: {
                 Label(String(localized: "toolbar.extract"), systemImage: "arrow.down.circle")
             }
+            .menuStyle(.borderlessButton)
             .help(String(localized: "toolbar.extract.help"))
             .labelStyle(.iconOnly)
 
@@ -173,6 +166,7 @@ struct ArchiveWorkspaceView: View {
             } label: {
                 Label(String(localized: "toolbar.extract_all"), systemImage: "arrow.down.to.line.circle")
             }
+            .menuStyle(.borderlessButton)
             .help(String(localized: "toolbar.extract_all.help"))
             .labelStyle(.iconOnly)
 
@@ -183,6 +177,7 @@ struct ArchiveWorkspaceView: View {
             } label: {
                 Label(String(localized: "toolbar.ql"), systemImage: "eye")
             }
+            .buttonStyle(.plain)
             .keyboardShortcut(.space, modifiers: [])
             .help(String(localized: "toolbar.ql.help"))
             .disabled(viewModel.selection.isEmpty)
@@ -248,7 +243,7 @@ struct ArchiveWorkspaceView: View {
 
     private var contentColumn: some View {
         VStack(spacing: 0) {
-            breadcrumbBar
+            topControlBar
 
             if let caps = viewModel.formatCaps, viewModel.index != nil {
                 ArchiveCapabilityBannerView(caps: caps) {
@@ -263,10 +258,98 @@ struct ArchiveWorkspaceView: View {
                     handleAddDrop(providers)
                 }
 
+            breadcrumbBar
             StatusBarView(viewModel: viewModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(AppColors.appBackground)
+    }
+
+    private var topControlBar: some View {
+        HStack(spacing: AppSpacing.sm) {
+            Button {
+                withAnimation(AppAnimation.standard) {
+                    sidebarVisible.toggle()
+                }
+            } label: {
+                Image(systemName: "sidebar.left")
+            }
+            .buttonStyle(.plain)
+            .help(String(localized: "toolbar.preview_panel.help"))
+
+            AppToolbarButton(
+                title: String(localized: "toolbar.up"),
+                systemImage: "arrow.up.square",
+                helpText: String(localized: "toolbar.up.help"),
+                disabled: viewModel.browseFolderPath.isEmpty
+            ) {
+                withAnimation(AppAnimation.standard) {
+                    viewModel.goUp()
+                }
+            }
+
+            Button {
+                viewModel.fileListUsesGridLayout.toggle()
+            } label: {
+                Image(systemName: viewModel.fileListUsesGridLayout ? "list.bullet" : "square.grid.2x2")
+            }
+            .buttonStyle(.plain)
+            .help(
+                viewModel.fileListUsesGridLayout
+                    ? String(localized: "toolbar.view_list")
+                    : String(localized: "toolbar.view_grid")
+            )
+
+            AppToolbarButton(
+                title: String(localized: "toolbar.open"),
+                systemImage: "folder.badge.plus",
+                helpText: String(localized: "toolbar.open.help")
+            ) {
+                app.openPanel()
+            }
+            .labelStyle(.iconOnly)
+
+            Button(String(localized: "toolbar.extract_primary")) {
+                if viewModel.selection.isEmpty {
+                    viewModel.extractEntireArchive(collision: app.extractionCollisionPolicy)
+                } else {
+                    viewModel.extractSelected(collision: app.extractionCollisionPolicy)
+                }
+            }
+            .buttonStyle(.plain)
+            .disabled(viewModel.index == nil)
+            .help(String(localized: "toolbar.extract_primary.help"))
+
+            Spacer(minLength: 0)
+
+            sortMenu
+                .labelStyle(.iconOnly)
+
+            SearchFieldView(
+                text: $viewModel.searchText,
+                searchEntireArchive: $viewModel.searchEntireArchive,
+                searchUsesRegex: $viewModel.searchUsesRegex,
+                searchMinSizeMBText: $viewModel.searchMinSizeMBText,
+                searchMaxSizeMBText: $viewModel.searchMaxSizeMBText,
+                searchRegexInvalid: viewModel.searchRegexInvalid,
+                placeholder: String(localized: "search.placeholder"),
+                scopeAllLabel: String(localized: "search.scope_all_short"),
+                scopeHelp: String(localized: "search.scope_all"),
+                onTextChange: { viewModel.applyListFilterAndSort() },
+                onScopeChange: { viewModel.applyListFilterAndSort() }
+            )
+
+        }
+        .frame(minHeight: 30, alignment: .center)
+        .padding(.horizontal, AppSpacing.md)
+        .padding(.top, 4)
+        .padding(.bottom, 4)
+        .background(AppColors.listHeaderTint)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(AppColors.separator)
+                .frame(height: 1)
+        }
     }
 
     /// Barra de ruta bajo el toolbar de la ventana: ancho completo de la columna central, sin competir con los botones.
@@ -325,6 +408,7 @@ struct ArchiveWorkspaceView: View {
         } label: {
             Label(String(localized: "toolbar.sort"), systemImage: "arrow.up.arrow.down.circle")
         }
+        .menuStyle(.borderlessButton)
         .help(String(localized: "toolbar.sort.help"))
     }
 
@@ -395,9 +479,9 @@ struct ArchiveWorkspaceView: View {
                         .keyboardShortcut(.escape, modifiers: [])
                     }
                     .padding(AppSpacing.xxl)
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: AppRadius.sheet, style: .continuous))
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous))
                     .overlay {
-                        RoundedRectangle(cornerRadius: AppRadius.sheet, style: .continuous)
+                        RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
                             .strokeBorder(AppColors.hairlineBorder, lineWidth: 1)
                     }
                 }
@@ -415,10 +499,10 @@ struct ArchiveWorkspaceView: View {
                     .foregroundStyle(AppColors.textPrimary)
                     .padding(.horizontal, AppSpacing.lg)
                     .padding(.vertical, AppSpacing.sm)
-                    .background(.ultraThinMaterial, in: Capsule(style: .continuous))
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
                     .overlay {
-                        Capsule(style: .continuous)
-                            .strokeBorder(AppColors.hairlineBorder, lineWidth: 1)
+                        RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
+                            .strokeBorder(AppColors.hairlineBorder, lineWidth: 0.75)
                     }
                 Spacer()
             }

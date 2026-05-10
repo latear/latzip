@@ -80,16 +80,16 @@ private struct WorkspaceTabPill: View {
         }
         .padding(.leading, 10)
         .padding(.trailing, 6)
-        .padding(.vertical, 6)
+        .padding(.vertical, 5)
         .background {
-            RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+            RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
                 .fill(isSelected ? AppColors.accentSoft : AppColors.crumbIdleFill)
         }
         .overlay {
-            RoundedRectangle(cornerRadius: AppRadius.medium, style: .continuous)
+            RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
                 .strokeBorder(
                     isSelected ? Color.accentColor.opacity(0.38) : AppColors.hairlineBorder,
-                    lineWidth: 1
+                    lineWidth: 0.75
                 )
         }
     }

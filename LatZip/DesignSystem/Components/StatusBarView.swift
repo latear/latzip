@@ -2,10 +2,10 @@
 //  StatusBarView.swift
 //  LatZip
 //
+//  Flat design: low-profile meta strip, no elevation.
 
 import SwiftUI
 
-/// Barra de estado inferior: solo lectura de datos ya calculados en el view model.
 struct StatusBarView: View {
     @ObservedObject var viewModel: ArchiveWorkspaceViewModel
 
@@ -39,7 +39,12 @@ struct StatusBarView: View {
         .foregroundStyle(AppColors.textSecondary)
         .padding(.horizontal, AppSpacing.lg)
         .padding(.vertical, AppSpacing.sm)
-        .background(.bar)
+        .background(AppColors.contentBackground)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(AppColors.separator)
+                .frame(height: 0.5)
+        }
     }
 
     private func statusDot() -> some View {

@@ -2,11 +2,12 @@
 //  AppShadows.swift
 //  LatZip
 //
+//  Flat design: near-zero elevation — no panel, card or floating shadows.
+//  Only subtle hairline borders and tonal separators remain.
 
 import SwiftUI
 
 enum AppShadow {
-    static let panel = (color: Color.black.opacity(0.065), radius: CGFloat(18), x: CGFloat(-5), y: CGFloat(8))
-    static let searchField = (color: Color.black.opacity(0.04), radius: CGFloat(1), x: CGFloat(0), y: CGFloat(1))
-    static let panelEdge = (color: Color.black.opacity(0.1), radius: CGFloat(0), x: CGFloat(0), y: CGFloat(0))
+    /// Hairline inset for search field (flat design — no elevation shadow).
+    static let searchField = (color: Color.clear, radius: CGFloat(0), x: CGFloat(0), y: CGFloat(0))
 }

@@ -1,6 +1,6 @@
 //
 //  CuratorSupportingViews.swift
-//  LatZip — componentes UI del rediseño «The Digital Curator».
+//  LatZip — Flat minimal supporting views.
 //
 
 import AppKit
@@ -15,10 +15,10 @@ struct CuratorEncryptedBadge: View {
             .foregroundStyle(Color.orange)
             .padding(.horizontal, AppSpacing.sm)
             .padding(.vertical, AppSpacing.xs)
-            .background(Color.orange.opacity(0.16), in: Capsule(style: .continuous))
+            .background(Color.orange.opacity(0.14), in: RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous))
             .overlay {
-                Capsule(style: .continuous)
-                    .strokeBorder(Color.orange.opacity(0.35), lineWidth: 1)
+                RoundedRectangle(cornerRadius: AppRadius.small, style: .continuous)
+                    .strokeBorder(Color.orange.opacity(0.28), lineWidth: 0.75)
             }
     }
 }
@@ -114,13 +114,13 @@ private struct CuratorGridCell: View {
         .padding(AppSpacing.md)
         .background(
             RoundedRectangle(cornerRadius: CuratorDesignTokens.cardRadius, style: .continuous)
-                .fill(isSelected ? CuratorDesignTokens.accentBlue.opacity(0.14) : AppColors.crumbIdleFill)
+                .fill(isSelected ? CuratorDesignTokens.accentBlue.opacity(0.12) : AppColors.crumbIdleFill)
         )
         .overlay {
             RoundedRectangle(cornerRadius: CuratorDesignTokens.cardRadius, style: .continuous)
                 .strokeBorder(
-                    isSelected ? CuratorDesignTokens.accentBlue.opacity(0.45) : AppColors.hairlineBorder,
-                    lineWidth: 1
+                    isSelected ? CuratorDesignTokens.accentBlue.opacity(0.40) : AppColors.hairlineBorder,
+                    lineWidth: 0.75
                 )
         }
     }
