@@ -70,8 +70,6 @@ struct ArchiveSidebarPanel: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColors.sidebarRailBackground)
-        .navigationTitle(viewModel.displayTitle)
-        .navigationSplitViewColumnWidth(min: 240, ideal: 240, max: 260)
     }
 
     private var sidebarBrandHeader: some View {
@@ -107,7 +105,7 @@ struct ArchiveSidebarPanel: View {
                     .foregroundStyle(AppColors.textSecondary)
                     .frame(width: AppLayoutMetrics.sidebarIconColumn, alignment: .center)
 
-                Text(String(localized: "help.sk.prefs"))
+                Text(String(localized: "sidebar.settings"))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppColors.textSecondary)
 

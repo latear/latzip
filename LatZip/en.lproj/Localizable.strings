@@ -32,7 +32,7 @@
 "toolbar.ql" = "Quick Look";
 "toolbar.ql.help" = "Show Quick Look preview for the selection (Space)";
 "toolbar.open" = "Open";
-"toolbar.open.help" = "Open another archive in a new tab";
+"toolbar.open.help" = "Open another archive";
 "toolbar.extract.help" = "Extract selection — choose a folder or extract next to the archive";
 "toolbar.extract_all.help" = "Extract entire archive — choose a folder or extract next to the archive";
 "toolbar.up.help" = "Go to the enclosing folder";
@@ -40,6 +40,7 @@
 "toolbar.sort.help" = "Sort the file list";
 "toolbar.preview_panel" = "Preview";
 "toolbar.preview_panel.help" = "Show or hide the preview column";
+"toolbar.sidebar_toggle.help" = "Show or hide the sidebar";
 "toolbar.favorite" = "Favorite";
 "toolbar.favorite.add_help" = "Add this archive to favorites";
 "toolbar.favorite.remove_help" = "Remove from favorites";
@@ -48,6 +49,7 @@
 "sidebar.favorites" = "Favorites";
 "sidebar.structure" = "Archive";
 "sidebar.favorite_remove" = "Remove from Favorites";
+"sidebar.settings" = "Settings";
 
 "welcome.title" = "LatZip";
 "welcome.subtitle" = "Browse ZIP, TAR, 7z and more without fully extracting.";

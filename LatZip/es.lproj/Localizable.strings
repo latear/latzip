@@ -32,7 +32,7 @@
 "toolbar.ql" = "Vista rápida";
 "toolbar.ql.help" = "Vista rápida de la selección (Espacio)";
 "toolbar.open" = "Abrir";
-"toolbar.open.help" = "Abrir otro archivo en una pestaña nueva";
+"toolbar.open.help" = "Abrir otro archivo";
 "toolbar.extract.help" = "Extraer selección: elegir carpeta o extraer junto al archivo";
 "toolbar.extract_all.help" = "Extraer todo: elegir carpeta o extraer junto al archivo";
 "toolbar.up.help" = "Ir a la carpeta superior";
@@ -40,6 +40,7 @@
 "toolbar.sort.help" = "Ordenar la lista de archivos";
 "toolbar.preview_panel" = "Vista previa";
 "toolbar.preview_panel.help" = "Mostrar u ocultar la columna de vista previa";
+"toolbar.sidebar_toggle.help" = "Mostrar u ocultar la barra lateral";
 "toolbar.favorite" = "Favorito";
 "toolbar.favorite.add_help" = "Añadir este archivo a favoritos";
 "toolbar.favorite.remove_help" = "Quitar de favoritos";
@@ -48,6 +49,7 @@
 "sidebar.favorites" = "Favoritos";
 "sidebar.structure" = "Archivo";
 "sidebar.favorite_remove" = "Quitar de favoritos";
+"sidebar.settings" = "Ajustes";
 
 "welcome.title" = "LatZip";
 "welcome.subtitle" = "Explora ZIP, TAR, 7z y más sin descomprimir todo.";

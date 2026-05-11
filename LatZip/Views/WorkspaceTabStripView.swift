@@ -2,7 +2,7 @@
 //  WorkspaceTabStripView.swift
 //  LatZip
 //
-//  Pestañas bajo la barra de título (no `TabView` nativo) para no competir con la toolbar de `NavigationSplitView`.
+//  Pestañas bajo la barra de título (no `TabView` nativo) para mantener el chrome propio de LatZip.
 //
 
 import SwiftUI

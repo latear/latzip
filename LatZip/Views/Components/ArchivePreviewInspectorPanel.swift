@@ -48,7 +48,6 @@ struct ArchivePreviewInspectorPanel: View {
                 .frame(maxHeight: .infinity)
         }
         .animation(AppAnimation.panelReveal, value: viewModel.selection.first)
-        .navigationSplitViewColumnWidth(min: 300, ideal: 340, max: 400)
     }
 
     @ViewBuilder

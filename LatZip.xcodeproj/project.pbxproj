@@ -69,6 +69,7 @@
 		E11BF0300001 /* ArchivePathSanitizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FR0300001 /* ArchivePathSanitizerTests.swift */; };
 		E11BF0660001 /* ArchiveExtractionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FR0660001 /* ArchiveExtractionServiceTests.swift */; };
 		E11BF0710001 /* ArchiveEngineIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FR0710001 /* ArchiveEngineIntegrationTests.swift */; };
+		E11BF0830001 /* ArchiveAppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11FR0830001 /* ArchiveAppStateTests.swift */; };
 		E11BF0310001 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E11FR0310001 /* XCTest.framework */; };
 /* End PBXBuildFile section */
 
@@ -137,6 +138,7 @@
 		E11FR0300001 /* ArchivePathSanitizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivePathSanitizerTests.swift; sourceTree = "<group>"; };
 		E11FR0660001 /* ArchiveExtractionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveExtractionServiceTests.swift; sourceTree = "<group>"; };
 		E11FR0710001 /* ArchiveEngineIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEngineIntegrationTests.swift; sourceTree = "<group>"; };
+		E11FR0830001 /* ArchiveAppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveAppStateTests.swift; sourceTree = "<group>"; };
 		E11FR0310001 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		E11FR0320001 /* InfoAdditions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = InfoAdditions.plist; sourceTree = "<group>"; };
 		E11PR9900001 /* LatZip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LatZip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +217,7 @@
 		E11GRPTST001 /* LatZipTests */ = {
 			isa = PBXGroup;
 			children = (
+				E11FR0830001 /* ArchiveAppStateTests.swift */,
 				E11FR0710001 /* ArchiveEngineIntegrationTests.swift */,
 				E11FR0660001 /* ArchiveExtractionServiceTests.swift */,
 				E11FR0300001 /* ArchivePathSanitizerTests.swift */,
@@ -514,6 +517,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E11BF0830001 /* ArchiveAppStateTests.swift in Sources */,
 				E11BF0660001 /* ArchiveExtractionServiceTests.swift in Sources */,
 				E11BF0710001 /* ArchiveEngineIntegrationTests.swift in Sources */,
 				E11BF0300001 /* ArchivePathSanitizerTests.swift in Sources */,

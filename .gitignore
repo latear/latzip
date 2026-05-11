@@ -41,6 +41,15 @@ fastlane/test_output
 
 lat/
 
+# AI / agent tooling
+.atl/
+.claude/
+.opencode/
+.cursor/
+.continue/
+.windsurf/
+.aider*
+
 # Otros
 AGENTS.md
 *.log

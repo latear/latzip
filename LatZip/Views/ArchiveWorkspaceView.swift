@@ -275,7 +275,7 @@ struct ArchiveWorkspaceView: View {
                 Image(systemName: "sidebar.left")
             }
             .buttonStyle(.plain)
-            .help(String(localized: "toolbar.preview_panel.help"))
+            .help(String(localized: "toolbar.sidebar_toggle.help"))
 
             AppToolbarButton(
                 title: String(localized: "toolbar.up"),
@@ -324,6 +324,16 @@ struct ArchiveWorkspaceView: View {
 
             sortMenu
                 .labelStyle(.iconOnly)
+
+            Button {
+                withAnimation(AppAnimation.standard) {
+                    viewModel.showPreviewPanel.toggle()
+                }
+            } label: {
+                Image(systemName: "sidebar.right")
+            }
+            .buttonStyle(.plain)
+            .help(String(localized: "toolbar.preview_panel.help"))
 
             SearchFieldView(
                 text: $viewModel.searchText,

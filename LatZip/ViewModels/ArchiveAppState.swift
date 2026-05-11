@@ -23,6 +23,7 @@ final class ArchiveAppState: ObservableObject {
     private static let extractionCollisionKey = "latzip.extractionCollisionPolicy"
     private static let appLanguageKey = "latzip.appLanguage"
 
+    /// LatZip intentionally owns a single archive workspace at a time: empty shell (`[]`) or one active workspace.
     @Published var workspaces: [ArchiveWorkspaceViewModel] = []
     @Published var selectedWorkspaceId: UUID?
 
@@ -194,6 +195,7 @@ final class ArchiveAppState: ObservableObject {
             current.cancelActiveOperation()
             current.cleanupTemp()
         }
+        // Opening an archive replaces the current workspace instead of appending a tab.
         let ws = ArchiveWorkspaceViewModel(archiveURL: standardized, displayTitle: displayTitle)
         workspaces = [ws]
         selectedWorkspaceId = ws.id
@@ -246,6 +248,7 @@ final class ArchiveAppState: ObservableObject {
         ws.cancelActiveOperation()
         ws.cleanupTemp()
         workspaces.removeAll { $0.id == ws.id }
+        // With the single-workspace invariant, closing the active workspace returns the shell to its welcome state.
         selectedWorkspaceId = nil
     }
 
