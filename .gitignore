@@ -7,6 +7,10 @@
 # Xcode
 DerivedData/
 build/
+dist/
+Archives/
+*.xcarchive
+*.app
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -22,6 +26,7 @@ xcuserdata/
 *.xcscmblueprint
 *.hmap
 *.ipa
+*.dmg
 *.dSYM
 *.dSYM.zip
 
@@ -49,9 +54,10 @@ lat/
 .continue/
 .windsurf/
 .aider*
+AGENTS.md
 
 # Otros
-AGENTS.md
+.git/
 *.log
 *.tmp
 *.swp
